@@ -13,6 +13,8 @@ class User:
 
     @firstname.setter
     def firstname(self, value):
+        if not isinstance(value, str):
+            raise ValueError("the name should be string!!")
         self.__firstname = value
 
     @property
@@ -21,6 +23,8 @@ class User:
 
     @lastname.setter
     def lastname(self, value):
+        if not isinstance(value, str):
+            raise ValueError("the lastname should be string!!")
         self.__lastname = value
 
 
@@ -52,6 +56,8 @@ class Customer(User):
 
     @wallet.setter
     def wallet(self, value):
+        if not isinstance(value,int):
+            raise ValueError("wallet should be integer")
         self.__wallet = value
 
 
@@ -61,6 +67,8 @@ class Customer(User):
 
     @is_active.setter
     def is_active(self, value):
+        if not isinstance(value,bool):
+            raise ValueError("is_active should be bool!!")
         self.__is_active = value
 
 
@@ -83,6 +91,9 @@ class Supplier(User):
 
     @point.setter
     def point(self, value):
+        if not isinstance(value,int):
+            raise ValueError("the point should be integer!!")
+
         self.__point = value
 
     @property
@@ -91,6 +102,8 @@ class Supplier(User):
 
     @wallet.setter
     def wallet(self, value):
+        if not isinstance(value, int):
+            raise ValueError("wallet should be integer")
         self.__wallet = value
 
     @property
@@ -99,7 +112,19 @@ class Supplier(User):
 
     @is_active.setter
     def is_active(self, value):
+        if not isinstance(value,bool):
+            raise ValueError("is_active should be bool!!")
         self.__is_active = value
+
+    @property
+    def address(self):
+        return self.__address
+
+    @address.setter
+    def address(self, value):
+        if not isinstance(value,str):
+            raise ValueError("the address should be string!!")
+        self.__address= value
 
 
 class Operator(User):
@@ -113,4 +138,6 @@ class Operator(User):
 
     @is_active.setter
     def is_active(self, value):
-        self.__is_active = value
+       if not isinstance(value, bool):
+         raise ValueError("is_active should be bool!!")
+       self.__is_active = value
