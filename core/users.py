@@ -3,10 +3,11 @@ import re
 
 class User:
 
-    def __init__(self, firstname, lastname, email):
+    def __init__(self, firstname, lastname, email, password):
         self.__firstname = firstname
         self.__lastname = lastname
         self.__email = email
+        self.__password = password
 
     def give_id(self):
         pass
@@ -41,6 +42,17 @@ class User:
         if not isinstance(value, str) or not re.search(pattern, value):
             raise ValueError("attribute *email* must be instance of <str>")
         self.__email = value
+
+    @property
+    def password(self):
+        return self.__password
+
+    @password.setter
+    def password(self, value):
+        pattern = '[A-Za-z0-9@#$%^&+=]{8,}'
+        if not isinstance(value, str) or not re.fullmatch(pattern, value):
+            raise ValueError("attribute *password* must be instance of <str>")
+        self.__password = value
 
 
 class Customer(User):
