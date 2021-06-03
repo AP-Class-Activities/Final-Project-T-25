@@ -43,6 +43,8 @@ class Product:
     def weight(self, value):
         if not isinstance(value, int):
             raise ValueError('attribute *weight* must be an instance of <int>')
+        elif value < 0:
+            raise ValueError('attribute *weight* must be positive')
         self.__weight = value
 
     @property
@@ -65,6 +67,8 @@ class Product:
     def price(self, value):
         if not isinstance(value, int):
             raise ValueError('attribute *price* must be an instance of <int>')
+        elif value < 0:
+            raise ValueError('attribute *price* must be positive')
         self.__price = value
 
     @property
@@ -76,7 +80,7 @@ class Product:
         if not isinstance(value, int):
             raise ValueError('attribute *price* must be an instance of <int>')
         elif value < 0:
-            raise ValueError('count cannot be negative')
+            raise ValueError('attribute *count* cannot be negative')
         self.__count = value
 
     @property
@@ -87,6 +91,9 @@ class Product:
     def rating(self, value):
         if not isinstance(value, str):
             raise ValueError('attribute *rating* must be an instance of <str>')
+        for vote in list(map(int, self.__rating.split('-'))):
+            if vote < 0:
+                raise ValueError('votes of attribute *rating* must be positive')
         self.__rating = value
 
     @property

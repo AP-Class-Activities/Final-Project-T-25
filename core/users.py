@@ -118,7 +118,6 @@ class Supplier(User):
     def point(self, value):
         if not isinstance(value, int):
             raise ValueError("the point should be integer!!")
-
         self.__point = value
 
     @property
