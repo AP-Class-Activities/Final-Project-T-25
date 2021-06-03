@@ -1,8 +1,12 @@
+import re
+
+
 class User:
 
-    def __init__(self, firstname, lastname):
+    def __init__(self, firstname, lastname, email):
         self.__firstname = firstname
         self.__lastname = lastname
+        self.__email = email
 
     def give_id(self):
         pass
@@ -26,6 +30,17 @@ class User:
         if not isinstance(value, str):
             raise ValueError("the lastname should be string!!")
         self.__lastname = value
+
+    @property
+    def email(self):
+        return self.__email
+
+    @email.setter
+    def email(self, value):
+        pattern = '^(\w\-\_\.)+[@](\w|\-\_\.)+[.]\w{2,3}$'
+        if not isinstance(value, str) or not re.search(pattern, value):
+            raise ValueError("attribute *email* must be instance of <str>")
+        self.__email = value
 
 
 class Customer(User):
@@ -56,10 +71,9 @@ class Customer(User):
 
     @wallet.setter
     def wallet(self, value):
-        if not isinstance(value,int):
+        if not isinstance(value, int):
             raise ValueError("wallet should be integer")
         self.__wallet = value
-
 
     @property
     def is_active(self):
@@ -67,7 +81,7 @@ class Customer(User):
 
     @is_active.setter
     def is_active(self, value):
-        if not isinstance(value,bool):
+        if not isinstance(value, bool):
             raise ValueError("is_active should be bool!!")
         self.__is_active = value
 
@@ -81,7 +95,6 @@ class Supplier(User):
         self.__is_active = False
         self.__address = address
 
-
     def calculate_point(self):
         pass
 
@@ -91,7 +104,7 @@ class Supplier(User):
 
     @point.setter
     def point(self, value):
-        if not isinstance(value,int):
+        if not isinstance(value, int):
             raise ValueError("the point should be integer!!")
 
         self.__point = value
@@ -112,7 +125,7 @@ class Supplier(User):
 
     @is_active.setter
     def is_active(self, value):
-        if not isinstance(value,bool):
+        if not isinstance(value, bool):
             raise ValueError("is_active should be bool!!")
         self.__is_active = value
 
@@ -122,9 +135,9 @@ class Supplier(User):
 
     @address.setter
     def address(self, value):
-        if not isinstance(value,str):
+        if not isinstance(value, str):
             raise ValueError("the address should be string!!")
-        self.__address= value
+        self.__address = value
 
 
 class Operator(User):
@@ -138,6 +151,6 @@ class Operator(User):
 
     @is_active.setter
     def is_active(self, value):
-       if not isinstance(value, bool):
-         raise ValueError("is_active should be bool!!")
-       self.__is_active = value
+        if not isinstance(value, bool):
+            raise ValueError("is_active should be bool!!")
+        self.__is_active = value
