@@ -21,6 +21,8 @@ class User:
     def firstname(self, value):
         if not isinstance(value, str):
             raise ValueError("the name should be string!!")
+        elif (value)>20:
+            raise ValueError("the firstname should be less than 50 charecter!")
         self.__firstname = value
 
     @property
@@ -31,6 +33,9 @@ class User:
     def lastname(self, value):
         if not isinstance(value, str):
             raise ValueError("the lastname should be string!!")
+        elif (value)>50:
+            raise ValueError("the lastname should be less than 50 charecter!")
+
         self.__lastname = value
 
     @property
