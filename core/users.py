@@ -2,7 +2,7 @@ import re
 
 
 class User:
-
+    """Base class for all users"""
     def __init__(self, firstname, lastname, email, password):
         self.__firstname = firstname
         self.__lastname = lastname
@@ -10,6 +10,7 @@ class User:
         self.__password = password
 
     def give_id(self):
+        """should be implemented with files"""
         pass
 
     @property
