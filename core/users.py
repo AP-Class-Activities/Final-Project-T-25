@@ -1,17 +1,31 @@
+# This file holds classes for all the online shop users
+# including customers, suppliers and operators
+# THIS FILE IS SUBJECT TO CHANGE
+
 import re
 
 
 class User:
     """Base class for all users"""
-    def __init__(self, firstname, lastname, email, password):
+    def __init__(self, firstname, lastname, email, password, phone):
         self.__firstname = firstname
         self.__lastname = lastname
         self.__email = email
         self.__password = password
+        self.__phone = phone
+        self.__id = self.give_id()
 
     def give_id(self):
         """should be implemented with files"""
         pass
+
+    def check_password(self, old_password):
+        """checks password matching"""
+        if self.__password == old_password:
+            return True
+
+    def change_password(self, new_password):
+        self.__password = new_password
 
     @property
     def firstname(self):
@@ -21,8 +35,8 @@ class User:
     def firstname(self, value):
         if not isinstance(value, str):
             raise ValueError("the name should be string!!")
-        elif (value)>20:
-            raise ValueError("the firstname should be less than 50 charecter!")
+        elif len(value) > 30:
+            raise ValueError("the firstname should be less than 30 character!")
         self.__firstname = value
 
     @property
@@ -33,8 +47,8 @@ class User:
     def lastname(self, value):
         if not isinstance(value, str):
             raise ValueError("the lastname should be string!!")
-        elif (value)>50:
-            raise ValueError("the lastname should be less than 50 charecter!")
+        elif len(value) > 50:
+            raise ValueError("the lastname should be less than 50 character!")
 
         self.__lastname = value
 
@@ -60,27 +74,50 @@ class User:
             raise ValueError("attribute *password* must be instance of <str>")
         self.__password = value
 
+    @property
+    def phone(self):
+        return self.__phone
+
+    @phone.setter
+    def phone(self, value):
+        if not isinstance(value, int):
+            raise ValueError("attribute *phone* must be instance of <int>")
+        elif len(value) != 11:
+            raise ValueError('attribute *phone* must be exactly 11 numbers')
+        self.__phone = value
+
+    @property
+    def id(self):
+        return self.__id
+
+    @id.setter
+    def id(self, value):
+        if not isinstance(value, int):
+            raise ValueError('attribute *id* must be an instance of <int>')
+        self.__id = value
+
 
 class Customer(User):
-
+    """Inherits from User"""
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
         self.__wallet = 0
         self.__is_active = True
+        self.__cart = []
 
     def charge_wallet(self, amount):
-        pass
+        self.__wallet += amount
 
     def add_to_favorites(self, name):
+        """should be implemented with files"""
         pass
 
     def remove_from_favorites(self, name):
+        """should be implemented with files"""
         pass
 
     def get_fav_list(self):
-        pass
-
-    def get_buy_list(self):
+        """should be implemented with files"""
         pass
 
     @property
@@ -90,7 +127,7 @@ class Customer(User):
     @wallet.setter
     def wallet(self, value):
         if not isinstance(value, int):
-            raise ValueError("wallet should be integer")
+            raise ValueError('wallet should be integer')
         self.__wallet = value
 
     @property
@@ -102,6 +139,16 @@ class Customer(User):
         if not isinstance(value, bool):
             raise ValueError("is_active should be bool!!")
         self.__is_active = value
+
+    @property
+    def cart(self):
+        return self.__cart
+
+    @cart.setter
+    def cart(self, value):
+        if not isinstance(value, str):
+            raise ValueError("attribute *value* must be instance of <str>")
+        self.__cart.append(value)
 
 
 class Supplier(User):

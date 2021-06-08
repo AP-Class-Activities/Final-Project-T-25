@@ -6,12 +6,14 @@ class Product:
         self.__description = desc
         self.__price = price
         self.__count = count
-        self.__rating = '0-0-0-0-0'
+        self.__rating = '0-0-0-0-0'  # this attr holds the number of votes (from 1 to 5 points) in descending order
         self.__id = self.give_id()
         self.__is_available = True
         self.__is_approved = False
 
     def calc_point(self):
+        """calculates total point of product using attribute *rating* by turning
+         the string into list of integers and applying the weighted average"""
         votes = list(map(int, self.__rating.split('-')))
         return (5 * votes[4] + 4 * votes[3] + 3 * votes[2] + 2 * votes[1] + 1 * votes[0]) / sum(votes)
 
@@ -20,10 +22,12 @@ class Product:
             self.__is_available = False
 
     def give_id(self):
+        """should be implemented with files"""
         pass
 
-    def reduce_count(self):
-        self.__count -= 1
+    def reduce_count(self, quantity):
+        """reduces count of product when it is bought"""
+        self.__count -= quantity
 
     @property
     def name(self):
