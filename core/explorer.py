@@ -67,3 +67,53 @@ def get_filename_pattern(filename):
     pattern = filename.rsplit('.')[0][-4:]
     pattern = 'save_' + (4 - len(str(int(pattern)))) * '0' + str(int(pattern) + 1) + '.json'
     return pattern
+
+
+def get_total(key, value, dirname):
+    count = 0
+    json_files = [f for f in os.listdir(dirname) if f.endswith('.json')]
+    for filename in json_files:
+        for dictionary in loadjson(dirname + '/' + filename):
+            if dictionary[key] == value:
+                count += 1
+    return count
+
+
+def search(value, dirname):
+    json_files = get_json_files(dirname)
+    for filename in json_files:
+        for obj in loadjson(dirname + '/' + filename):
+            if obj['id'] == value:
+                return obj
+
+
+def get_next_id(dirname):
+    json_files = get_json_files(dirname)
+    if not json_files:
+        return '0001'
+    for obj in loadjson(dirname + '/' + json_files[-1]):  # PRxxxx
+        pass
+    return (4 - len(str(int(obj['id'][-4:])))) * '0' + str(int(obj['id'][-4:]) + 1)
+
+
+def get_file(dirname, obj_id):
+    json_files = get_json_files(dirname)
+    for filename in json_files:
+        for obj in loadjson(dirname + '/' + filename):
+            if obj['id'] == obj_id:
+                return filename
+
+
+def overwrite(dirname, obj):
+    filename = get_file(dirname, obj['id'])
+    object_list = []
+    with open(dirname + '/' + filename, 'r+') as file:
+        for line in file:
+            if json.loads(line)['id'] == obj['id']:
+                object_list.append(json.dumps(obj))
+                continue
+            object_list.append(line[:-1])
+    with open(dirname + '/' + filename, 'w') as file:
+        for item in object_list:
+            file.write(item)
+            file.write('\n')
