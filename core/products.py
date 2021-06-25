@@ -1,3 +1,6 @@
+from core import explorer, constants
+
+
 class Product:
 
     def __init__(self, name, weight, desc, price, count):
@@ -10,6 +13,7 @@ class Product:
         self.__id = self.give_id()
         self.__is_available = True
         self.__is_approved = False
+        self._save()
 
     def calc_point(self):
         """calculates total point of product using attribute *rating* by turning
@@ -21,13 +25,16 @@ class Product:
         if self.count == 0:
             self.__is_available = False
 
-    def give_id(self):
-        """should be implemented with files"""
-        pass
+    @staticmethod
+    def give_id():
+        return explorer.get_next_id(constants.product_filepath())
 
     def reduce_count(self, quantity):
         """reduces count of product when it is bought"""
         self.__count -= quantity
+
+    def _save(self):
+        explorer.save(self, constants.product_filepath())
 
     @property
     def name(self):
@@ -129,3 +136,8 @@ class Product:
         if not isinstance(value, bool):
             raise ValueError('attribute *is_approved* must be an instance of <bool>')
         self.__is_approved = value
+
+    def __iter__(self):
+        temp = self.__dict__
+        temp.update({'rating': '0-0-0-0-0'})
+        yield from temp.items()
