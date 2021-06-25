@@ -1,6 +1,12 @@
 import json
 import os
 from core import constants
+from pathlib import Path
+
+
+def make_directory(path_to_directory):
+    p = Path(path_to_directory)
+    p.mkdir(exist_ok=True, parents=True)
 
 
 def beautify_key(string):
@@ -47,7 +53,10 @@ def count_objects(filename, dirname):
 
 def get_json_files(dirname):
     """lists all JSON files in given directory"""
-    return [f for f in os.listdir(dirname) if f.endswith('.json')]
+    try:
+        return [f for f in os.listdir(dirname) if f.endswith('.json')]
+    except FileNotFoundError:
+        make_directory(dirname)
 
 
 def get_filename(dirname):
@@ -79,19 +88,19 @@ def get_total(key, value, dirname):
     return count
 
 
-def search(value, dirname):
+def search(obj_id, dirname):
     json_files = get_json_files(dirname)
     for filename in json_files:
         for obj in loadjson(dirname + '/' + filename):
-            if obj['id'] == value:
+            if obj['id'] == obj_id:
                 return obj
 
 
 def get_next_id(dirname):
     json_files = get_json_files(dirname)
-    if not json_files:
+    if not json_files or os.stat(dirname + '/' + json_files[0]).st_size == 0:
         return '0001'
-    for obj in loadjson(dirname + '/' + json_files[-1]):  # PRxxxx
+    for obj in loadjson(dirname + '/' + json_files[-1]):
         pass
     return (4 - len(str(int(obj['id'][-4:])))) * '0' + str(int(obj['id'][-4:]) + 1)
 
@@ -105,6 +114,7 @@ def get_file(dirname, obj_id):
 
 
 def overwrite(dirname, obj):
+    obj = beautify_all(obj)
     filename = get_file(dirname, obj['id'])
     object_list = []
     with open(dirname + '/' + filename, 'r+') as file:
