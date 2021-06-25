@@ -27,14 +27,14 @@ class Product:
 
     @staticmethod
     def give_id():
-        return explorer.get_next_id(constants.product_filepath())
+        return explorer.get_next_id(constants.product_data_filepath())
 
     def reduce_count(self, quantity):
         """reduces count of product when it is bought"""
         self.__count -= quantity
 
     def _save(self):
-        explorer.save(self, constants.product_filepath())
+        explorer.save(self, constants.product_data_filepath())
 
     @property
     def name(self):
