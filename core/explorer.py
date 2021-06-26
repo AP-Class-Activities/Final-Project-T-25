@@ -2,6 +2,7 @@ import json
 import os
 from core import constants
 from pathlib import Path
+import shutil
 
 
 def make_directory(path_to_directory):
@@ -26,6 +27,51 @@ def beautify_all(obj):
 class CustomEncoder(json.JSONEncoder):
     def default(self, obj):
         return beautify_all(obj)
+
+
+def save_cart(dirname, obj):
+    if not os.path.isdir(dirname):
+        make_directory(dirname)
+    filename = get_filename(dirname)
+    with open(os.path.join(dirname + '/' + filename), 'a+') as file:
+        json.dump(obj, file, cls=CustomEncoder)
+        file.write('\n')
+
+
+def save_comment(dirname, obj):
+    dirname += f'/product_{obj.product_id}'
+    if not os.path.isdir(dirname):
+        make_directory(dirname)
+    if not os.listdir(dirname):
+        json_file = '1.json'
+    else:
+        json_file = sorted(os.listdir(dirname))[-1]
+        if count_objects(json_file, dirname) >= constants.FILE_LIMIT:
+            json_file = str(int(json_file[0]) + 1) + '.json'
+    with open(os.path.join(dirname + '/' + json_file), 'a+') as file:
+        json.dump(obj, file, cls=CustomEncoder)
+        file.write('\n')
+
+
+def save_image(dirname, image, image_name):
+    file_limit = constants.FILE_LIMIT
+    if not os.path.isdir(dirname):
+        make_directory(dirname)
+    sub_dirs = os.listdir(dirname)
+    if not sub_dirs:
+        sub_dirs.append('1-' + str(file_limit))
+        dirname = os.path.join(dirname + '/1-' + str(file_limit))
+        make_directory(dirname)
+    else:
+        if len(os.listdir(os.path.join(dirname + '/' + sorted(sub_dirs)[-1]))) >= file_limit:
+            name = sorted(sub_dirs)[-1].split('-')
+            name = str(int(name[0]) + file_limit) + '-' + str(int(name[1]) + file_limit)
+            dirname = os.path.join(dirname + '/' + name)
+            make_directory(dirname)
+        else:
+            dirname = os.path.join(dirname + '/' + sorted(sub_dirs)[-1])
+
+    shutil.copy(image, os.path.join(dirname, image_name))
 
 
 def save(obj, dirname):  # save file pattern: save_xxxx.json
