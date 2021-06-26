@@ -9,6 +9,7 @@ FILE_STORAGE_PATH = 'database/'
 PRODUCTS_FILEPATH = FILE_STORAGE_PATH + 'products/'
 USERS_FILEPATH = FILE_STORAGE_PATH + 'users/'
 HISTORY_FILEPATH = FILE_STORAGE_PATH + 'history/'
+CART_FILEPATH = FILE_STORAGE_PATH + 'cart/'
 
 PRODUCT_DATA_FILEPATH = PRODUCTS_FILEPATH + 'data/'
 PRODUCT_IMAGE_FILEPATH = PRODUCTS_FILEPATH + 'images/'
@@ -51,3 +52,7 @@ def operator_filepath():
 
 def history_filepath():
     return get_path(HISTORY_FILEPATH)
+
+
+def cart_filepath():
+    return get_path(CART_FILEPATH)
