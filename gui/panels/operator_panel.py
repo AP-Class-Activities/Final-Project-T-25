@@ -1,14 +1,10 @@
-from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QPushButton,
-                             QWidget, QFormLayout, QDialog, QDialogButtonBox,
-                             QLineEdit, QMainWindow, QToolBar, QStatusBar,
-                             QHBoxLayout, QGroupBox, QGridLayout, QFrame,
-                             QMenuBar, QAction, QScrollArea, QTextEdit,
-                             QTabWidget, QComboBox)
-from PyQt5.QtGui import QPixmap, QFont, QTextDocument
-from PyQt5.QtCore import QRect, Qt
 from functools import partial
+
+from PyQt5.QtWidgets import (QLabel, QVBoxLayout, QPushButton,
+                             QWidget, QHBoxLayout, QGridLayout, QFrame,
+                             QTabWidget)
+
 from core import explorer, constants
-from core.users import Supplier
 
 
 class OperatorPanel(QTabWidget):

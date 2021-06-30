@@ -1,15 +1,11 @@
-from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QPushButton,
-                             QWidget, QFormLayout, QDialog, QDialogButtonBox,
-                             QLineEdit, QMainWindow, QToolBar, QStatusBar,
-                             QHBoxLayout, QGroupBox, QGridLayout, QFrame,
-                             QMenuBar, QAction, QScrollArea)
-from PyQt5.QtGui import QPixmap, QFont, QTextDocument
-from PyQt5.QtCore import QRect, Qt
-from functools import partial
-from gui.custom_widgets import QClickLabel
-from core import explorer
-from core import constants
 import os
+from functools import partial
+
+from PyQt5.QtWidgets import (QVBoxLayout, QPushButton,
+                             QWidget)
+
+from core import constants
+from core import explorer
 
 
 class HistoryListView(QWidget):

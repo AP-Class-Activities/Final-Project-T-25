@@ -1,15 +1,7 @@
-from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QPushButton,
-                             QWidget, QFormLayout, QDialog, QDialogButtonBox,
-                             QLineEdit, QMainWindow, QToolBar, QStatusBar,
-                             QHBoxLayout, QGroupBox, QGridLayout, QFrame,
-                             QMenuBar, QAction, QScrollArea, QTextEdit, QMessageBox)
-from PyQt5.QtGui import QPixmap, QFont, QTextDocument
-from PyQt5.QtCore import QRect, Qt
 from functools import partial
-from core.comments import Comment
-from core import explorer, constants
-from core.products import Product
-import os
+
+from PyQt5.QtWidgets import (QLabel, QPushButton,
+                             QWidget, QHBoxLayout)
 
 
 class WalletView(QWidget):

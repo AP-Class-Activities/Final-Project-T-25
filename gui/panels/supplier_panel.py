@@ -1,15 +1,14 @@
-from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QPushButton,
-                             QWidget, QFormLayout, QDialog, QDialogButtonBox,
-                             QLineEdit, QMainWindow, QToolBar, QStatusBar,
-                             QHBoxLayout, QGroupBox, QGridLayout, QFrame,
-                             QMenuBar, QAction, QScrollArea, QTextEdit,
-                             QTabWidget, QComboBox, QFileDialog, QMessageBox)
-from PyQt5.QtGui import QPixmap, QFont, QTextDocument
-from PyQt5.QtCore import QRect, Qt
+import os
 from functools import partial
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import (QLabel, QVBoxLayout, QPushButton,
+                             QWidget, QLineEdit, QHBoxLayout, QGridLayout, QFrame,
+                             QTabWidget, QComboBox, QFileDialog, QMessageBox)
+
 from core import explorer, constants
 from core.products import Product
-import os
 
 
 class SupplierPanel(QTabWidget):

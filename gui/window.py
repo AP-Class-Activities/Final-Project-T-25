@@ -1,29 +1,29 @@
+import sys
+from functools import partial
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QPushButton,
                              QWidget, QMainWindow, QHBoxLayout, QGroupBox,
                              QGridLayout, QMenuBar, QAction, QScrollArea,
                              QStackedWidget, QMessageBox)
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
-from functools import partial
-from gui.product_view import ProductView
-from gui.cart_view import CartView
-from gui.custom_widgets import QClickLabel
-from gui.auth.login_views import CustomerLoginView, SupplierLoginView, OperatorLoginView
-from gui.auth.register_views import CustomerRegisterView, SupplierRegisterView, OperatorRegisterView
-from gui.category_view import ItemCategory
-from gui.panels.supplier_panel import SupplierPanel
-from gui.panels.operator_panel import OperatorPanel
-from gui.history_list_view import HistoryListView
-from gui.history_item_view import HistoryItemVIew
-from gui.wallet_view import WalletView
+
 from core import explorer, constants
-from core.users import Customer, Supplier, Operator
-from core.products import Product
 from core.cart import Cart
 from core.history import History
 from core.supplier_logs import SupplierLog
-import sys
-import random
+from core.users import Customer, Supplier, Operator
+from gui.auth.login_views import CustomerLoginView, SupplierLoginView, OperatorLoginView
+from gui.auth.register_views import CustomerRegisterView, SupplierRegisterView, OperatorRegisterView
+from gui.cart_view import CartView
+from gui.category_view import ItemCategory
+from gui.custom_widgets import QClickLabel
+from gui.history_item_view import HistoryItemVIew
+from gui.history_list_view import HistoryListView
+from gui.panels.operator_panel import OperatorPanel
+from gui.panels.supplier_panel import SupplierPanel
+from gui.product_view import ProductView
+from gui.wallet_view import WalletView
 
 
 class Window(QMainWindow):
