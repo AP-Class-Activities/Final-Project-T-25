@@ -3,17 +3,20 @@ from core import explorer, constants
 
 class Product:
 
-    def __init__(self, name, weight, desc, price, count):
-        self.__name = name
-        self.__weight = weight
-        self.__description = desc
-        self.__price = price
-        self.__count = count
-        self.__rating = '0-0-0-0-0'  # this attr holds the number of votes (from 1 to 5 points) in descending order
-        self.__id = self.give_id()
-        self.__is_available = True
-        self.__is_approved = False
-        self._save()
+    def __init__(self, category, name, weight, desc, price, count, supplier_id, save_to_database=True):
+        self.category = category
+        self.name = name
+        self.weight = weight
+        self.description = desc
+        self.price = price
+        self.count = count
+        self.supplier_id = supplier_id
+        self.rating = '0-0-0-0-0'  # this attr holds the number of votes (from 1 to 5 points) in descending order
+        self.id = self.give_id()
+        self.is_available = True
+        self.is_approved = False
+        if save_to_database:
+            self._save()
 
     def calc_point(self):
         """calculates total point of product using attribute *rating* by turning
@@ -35,6 +38,16 @@ class Product:
 
     def _save(self):
         explorer.save(self, constants.product_data_filepath())
+
+    @property
+    def category(self):
+        return self.__category
+
+    @category.setter
+    def category(self, value):
+        if not isinstance(value, str):
+            raise ValueError('attribute *category* must be an instance of <str>')
+        self.__category = value
 
     @property
     def name(self):
@@ -95,6 +108,16 @@ class Product:
         self.__count = value
 
     @property
+    def supplier_id(self):
+        return self.__supplier_id
+
+    @supplier_id.setter
+    def supplier_id(self, value):
+        if not isinstance(value, int):
+            raise ValueError('attribute *supplier_id* must be an instance of <int>')
+        self.__supplier_id = value
+
+    @property
     def rating(self):
         return self.__rating
 
@@ -102,9 +125,12 @@ class Product:
     def rating(self, value):
         if not isinstance(value, str):
             raise ValueError('attribute *rating* must be an instance of <str>')
-        for vote in list(map(int, self.__rating.split('-'))):
-            if vote < 0:
-                raise ValueError('votes of attribute *rating* must be positive')
+        try:
+            for vote in list(map(int, self.__rating.split('-'))):
+                if vote < 0:
+                    raise ValueError('votes of attribute *rating* must be positive')
+        except AttributeError:
+            pass
         self.__rating = value
 
     @property

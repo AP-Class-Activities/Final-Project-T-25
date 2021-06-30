@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QPushButton, QWidget, QLineEdit, QTabWidget
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox
 from core.users import Customer, Supplier, Operator
+from core import explorer, constants
 
 
 class CustomerRegisterView(QWidget):
-    def __init__(self, parent_widget, parent=None):
+    def __init__(self, register_method, parent=None):
         super().__init__(parent)
-        self.parent_widget = parent_widget
+        self.register_method = register_method
         self.setLayout(self.setUI())
         self.setStyleSheet('border: 1px solid red; background-color: white;')
 
@@ -43,19 +44,20 @@ class CustomerRegisterView(QWidget):
 
     def _create_user(self):
         if self.password_textbox.text() == self.confirm_password_textbox.text():
+            for u in explorer.get_all(constants.customer_filepath()):
+                if int(self.phone_textbox.text()) == u['phone'] or self.email_textbox.text() == u['email']:
+                    QMessageBox.about(self, 'Error', 'duplicate phone number or email')
+                    return
             user = Customer(self.phone_textbox.text(), self.email_textbox.text(), self.password_textbox.text())
-            parent_widget = self.parent_widget.window()
-            parent_widget.set_user(user, True)
-            parent_widget.change_to_main()
-            parent_widget.enable_logout()
+            self.register_method(user, 'customer')
         else:
-            print('passwords do not match')
+            QMessageBox.about(self, 'Error', 'Passwords do not match!')
 
 
 class SupplierRegisterView(QWidget):
-    def __init__(self, parent_widget, parent=None):
+    def __init__(self, register_method, parent=None):
         super().__init__(parent)
-        self.parent_widget = parent_widget
+        self.register_method = register_method
         self.setLayout(self.setUI())
         self.setStyleSheet('border: 1px solid red; background-color: white;')
 
@@ -108,20 +110,21 @@ class SupplierRegisterView(QWidget):
 
     def _create_user(self):
         if self.password_textbox.text() == self.confirm_password_textbox.text():
+            for u in explorer.get_all(constants.supplier_logs_filepath()):
+                if int(self.phone_textbox.text()) == u['phone'] or self.email_textbox.text() == u['email']:
+                    QMessageBox.about(self, 'Error', 'duplicate phone number or email')
+                    return
             user = Supplier(self.firstname_textbox.text(), self.lastname_textbox.text(), self.address_textbox.text(),
                             self.phone_textbox.text(), self.email_textbox.text(), self.password_textbox.text())
-            parent_widget = self.parent_widget.window()
-            parent_widget.set_user(user, True)
-            parent_widget.change_to_main()
-            parent_widget.enable_logout()
+            self.register_method(user, 'supplier')
         else:
-            print('passwords do not match')
+            QMessageBox.about(self, 'Error', 'Passwords do not match!')
 
 
 class OperatorRegisterView(QWidget):
-    def __init__(self, parent_widget, parent=None):
+    def __init__(self, register_method, parent=None):
         super().__init__(parent)
-        self.parent_widget = parent_widget
+        self.register_method = register_method
         self.setLayout(self.setUI())
         self.setStyleSheet('border: 1px solid red; background-color: white;')
 
@@ -169,12 +172,12 @@ class OperatorRegisterView(QWidget):
 
     def _create_user(self):
         if self.password_textbox.text() == self.confirm_password_textbox.text():
-            print('passwords matched')
+            for u in explorer.get_all(constants.operator_filepath()):
+                if int(self.phone_textbox.text()) == u['phone'] or self.email_textbox.text() == u['email']:
+                    QMessageBox.about(self, 'Error', 'duplicate phone number or email')
+                    return
             user = Operator(self.firstname_textbox.text(), self.lastname_textbox.text(),
                             self.phone_textbox.text(), self.email_textbox.text(), self.password_textbox.text())
-            parent_widget = self.parent_widget.window()
-            parent_widget.set_user(user, True)
-            parent_widget.change_to_main()
-            parent_widget.enable_logout()
+            self.register_method(user, 'operator')
         else:
-            print('passwords do not match')
+            QMessageBox.about(self, 'Error', 'Passwords do not match!')

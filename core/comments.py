@@ -3,12 +3,13 @@ from core import constants
 
 
 class Comment:
-    def __init__(self, text, rating, user_id, product_id):
+    def __init__(self, text, rating, user_id, product_id, save_to_database=False):
         self.text = text
         self.rating = rating
         self.user_id = user_id
         self.product_id = product_id
-        self.save()
+        if save_to_database:
+            self.save()
 
     def save(self):
         explorer.save_comment(constants.product_comments_filepath(), self)

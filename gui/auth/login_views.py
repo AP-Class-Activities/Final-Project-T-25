@@ -3,9 +3,9 @@ from core.users import Customer, Supplier, Operator
 
 
 class CustomerLoginView(QWidget):
-    def __init__(self, parent_widget, parent=None):
+    def __init__(self, login_method, parent=None):
         super().__init__(parent)
-        self.parent_widget = parent_widget
+        self.login_method = login_method
         self.setLayout(self.setUI())
         self.setStyleSheet('border: 1px solid red; background-color: white;')
 
@@ -35,20 +35,16 @@ class CustomerLoginView(QWidget):
         user = Customer.get_object(self.phone_textbox.text())
         if user['password'] == self.password_textbox.text():
             user['type'] = 'customer'
-            user = self.parent_widget.window().build_user(user)
-            parent_window = self.parent_widget.window()
-            parent_window.set_user(user, True)
-            parent_window._usertype = 'customer'
-            parent_window.change_to_main()
-            parent_window.enable_logout()
+            self.login_method(user, user['type'])
+
         else:
             print('false')
 
 
 class SupplierLoginView(QWidget):
-    def __init__(self, parent_widget, parent=None):
+    def __init__(self, login_method, parent=None):
         super().__init__(parent)
-        self.parent_widget = parent_widget
+        self.login_method = login_method
         self.setLayout(self.setUI())
         self.setStyleSheet('border: 1px solid red; background-color: white;')
 
@@ -78,20 +74,15 @@ class SupplierLoginView(QWidget):
         user = Supplier.get_object(self.phone_textbox.text())
         if user['password'] == self.password_textbox.text():
             user['type'] = 'supplier'
-            user = self.parent_widget.window().build_user(user)
-            parent_window = self.parent_widget.window()
-            parent_window.set_user(user, True)
-            parent_window._usertype = 'supplier'
-            parent_window.change_to_main()
-            parent_window.enable_logout()
+            self.login_method(user, user['type'])
         else:
             print('false')
 
 
 class OperatorLoginView(QWidget):
-    def __init__(self, parent_widget, parent=None):
+    def __init__(self, login_method, parent=None):
         super().__init__(parent)
-        self.parent_widget = parent_widget
+        self.login_method = login_method
         self.setLayout(self.setUI())
         self.setStyleSheet('border: 1px solid red; background-color: white;')
 
@@ -121,11 +112,6 @@ class OperatorLoginView(QWidget):
         user = Operator.get_object(self.phone_textbox.text())
         if user['password'] == self.password_textbox.text():
             user['type'] = 'operator'
-            user = self.parent_widget.window().build_user(user)
-            parent_window = self.parent_widget.window()
-            parent_window.set_user(user, True)
-            parent_window._usertype = 'operator'
-            parent_window.change_to_main()
-            parent_window.enable_logout()
+            self.login_method(user, user['type'])
         else:
             print('false')
