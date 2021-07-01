@@ -1,2 +1,2 @@
-{"phone": 9123456789, "email": "AlexAdams@email.com", "password": "alexAdams44", "id": 1, "firstname": "Alex", "lastname": "Adams", "point": 50, "wallet": 0, "is_active": false, "is_approved": true, "address": "2347  Woodland Avenue - Metairie"}
+{"phone": 9123456789, "email": "AlexAdams@email.com", "password": "alexAdams44", "id": 1, "firstname": "Alex", "lastname": "Adams", "point": 50, "wallet": 1347, "is_active": false, "is_approved": true, "address": "2347  Woodland Avenue - Metairie"}
 {"phone": 9134343434, "email": "MorganFreeman@mail.com", "password": "MoreFree", "id": 2, "firstname": "Morgan", "lastname": "Freeman", "point": 50, "wallet": 0, "is_active": false, "is_approved": true, "address": "677 street - Laurence"}

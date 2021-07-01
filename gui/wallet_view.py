@@ -1,5 +1,6 @@
 from functools import partial
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QLabel, QPushButton,
                              QWidget, QHBoxLayout)
 
@@ -12,7 +13,7 @@ class WalletView(QWidget):
         self.usertype = usertype
         self.credits = 100
         self.setLayout(self._create_wallet_part())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def _create_wallet_part(self):
         hlayout = QHBoxLayout()
@@ -27,6 +28,12 @@ class WalletView(QWidget):
         elif self.usertype == 'supplier':
             add_button = QPushButton('Withdraw')
             add_button.clicked.connect(self.withdraw)
+        for widget in [counter_label, minus_button, plus_button]:
+            widget.setMaximumHeight(200)
+            widget.setStyleSheet('background-color: limegreen; font-size: 24px; font-weight: bold;')
+        counter_label.setAlignment(Qt.AlignCenter)
+        add_button.setMaximumHeight(200)
+        add_button.setStyleSheet('QPushButton::hover {background-color: green;} QPushButton {background-color: limegreen; font-weight: bold; font-size: 28px;}')
         hlayout.addWidget(minus_button)
         hlayout.addWidget(counter_label)
         hlayout.addWidget(plus_button)

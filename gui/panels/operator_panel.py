@@ -1,10 +1,15 @@
+from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QPushButton,
+                             QWidget, QFormLayout, QDialog, QDialogButtonBox,
+                             QLineEdit, QMainWindow, QToolBar, QStatusBar,
+                             QHBoxLayout, QGroupBox, QGridLayout, QFrame,
+                             QMenuBar, QAction, QScrollArea, QTextEdit,
+                             QTabWidget, QComboBox, QMessageBox)
+from PyQt5.QtGui import QPixmap, QFont, QTextDocument
+from PyQt5.QtCore import QRect, Qt
 from functools import partial
-
-from PyQt5.QtWidgets import (QLabel, QVBoxLayout, QPushButton,
-                             QWidget, QHBoxLayout, QGridLayout, QFrame,
-                             QTabWidget, QMessageBox)
-
 from core import explorer, constants
+from core.users import Supplier
+import os
 
 
 class OperatorPanel(QTabWidget):
@@ -53,32 +58,45 @@ class OperatorPanel(QTabWidget):
 
     def _create_details_part(self):
         left_layout = QGridLayout()
-        right_layout = QGridLayout()
         hlayout = QHBoxLayout()
 
-        label1 = QLabel('Current Statement')
-        label2 = QLabel('$634,000')
-        label3 = QLabel('$63,500')
-        label4 = QLabel('$1,000,000')
+        orders = []
+        total_revenue = 0
+        sold_items = 0
+        unique_product_ids = set()
+        dirs = os.listdir(constants.supplier_logs_filepath())
+        for d in dirs:
+            orders.append(explorer.get_all(os.path.join(constants.supplier_logs_filepath(), d)))
+        condition = any(x != [] for x in orders)
+        if condition:
+            for order in orders:
+                for items in order:
+                    for item in items['items']:
+                        total_revenue += int(item[0]) * int(item[1])
+                        sold_items += item[0]
+                        unique_product_ids.add(item[2])
+        label1 = QLabel('Overall State')
+        label1.setAlignment(Qt.AlignCenter)
+        label2 = QLabel(f'Total Revenue\n${total_revenue}')
+        if not condition:
+            label3 = QLabel(f'Total Orders\n0')
+        else:
+            label3 = QLabel('Total Orders\n' + str(len(orders)))
+        label4 = QLabel(f'Items Sold\n{sold_items}')
+        label5 = QLabel(f'Unique Items Sold\n{len(unique_product_ids)}')
 
-        label5 = QLabel('Current Statement')
-        label6 = QLabel('$634,000')
-        label7 = QLabel('$63,500')
-        label8 = QLabel('$1,000,000')
+        for widget in [label5, label4, label1, label3, label2]:
+            widget.setStyleSheet('background-color: #cdffc4; font-size: 20px;')
+        label1.setStyleSheet('font-weight: bold; font-size: 40px; background-color: #bff0b6;')
 
-        left_layout.addWidget(label1, 0, 0, 1, 3)
+        left_layout.addWidget(label1, 0, 0, 1, 4)
         left_layout.addWidget(label2, 1, 0)
         left_layout.addWidget(label3, 1, 1)
         left_layout.addWidget(label4, 1, 2)
-
-        right_layout.addWidget(label5, 0, 0, 1, 3)
-        right_layout.addWidget(label6, 1, 0)
-        right_layout.addWidget(label7, 1, 1)
-        right_layout.addWidget(label8, 1, 2)
+        left_layout.addWidget(label5, 1, 3)
 
         hlayout.addLayout(left_layout)
-        hlayout.addLayout(right_layout)
-        hlayout.setContentsMargins(0, 24, 0, 24)
+        hlayout.setContentsMargins(0, 36, 0, 36)
         return hlayout
 
     def _create_recent_details(self):

@@ -13,7 +13,6 @@ from core.comments import Comment
 class ProductView(QWidget):
     def __init__(self, add_to_cart, product_id=None, supplier_id=None, image=None, name=None, price=None, desc=None, user=None, usertype=None, parent=None):
         super().__init__(parent)
-        print('init')
         self.product_id = product_id
         self.supplier_id = supplier_id
         self.image = image
@@ -23,6 +22,7 @@ class ProductView(QWidget):
         self.user = user
         self.usertype = usertype
         self.add_to_cart = add_to_cart
+        self.user_rating = 5
         self.comments = explorer.get_all(os.path.join(constants.product_comments_filepath(), str(self.product_id)))
         self.product_dict = explorer.search(self.product_id, constants.product_data_filepath())
         self.quantity = 1
@@ -52,6 +52,8 @@ class ProductView(QWidget):
         vlayout = QVBoxLayout()
 
         votes = list(map(int, self.product_dict['rating'].split('-')))
+        print(self.product_dict['rating'])
+        print(votes)
         try:
             rating = (5 * votes[4] + 4 * votes[3] + 3 * votes[2] + 2 * votes[1] + 1 * votes[0]) / sum(votes)
         except ZeroDivisionError:
@@ -61,8 +63,9 @@ class ProductView(QWidget):
         name_and_rating = QHBoxLayout()
         name = QLabel(self.name)
         name.setMaximumHeight(200)
-        rating = QLabel(str(rating))
+        rating = QLabel(str(rating) + ' Stars')
         rating.setMaximumHeight(200)
+        rating.setAlignment(Qt.AlignCenter)
         name_and_rating.addWidget(name)
         name_and_rating.addWidget(rating)
         name_and_rating.setStretch(0, 8)
@@ -73,6 +76,10 @@ class ProductView(QWidget):
         desc = QLabel(str(self.desc))
         desc.setWordWrap(True)
         desc.setMaximumHeight(200)
+
+        for widget in [name, rating, price, desc]:
+            widget.setStyleSheet('background-color: #d9ffdf; font-size: 24px; font-weight: bold;')
+
         vlayout.addLayout(name_and_rating)
         vlayout.addWidget(price)
         vlayout.addWidget(desc)
@@ -100,7 +107,7 @@ class ProductView(QWidget):
             plus_button.setDisabled(True)
         for widget in [minus_button, plus_button, counter_label]:
             widget.setMinimumHeight(100)
-            widget.setStyleSheet('font-size: 18px;')
+            widget.setStyleSheet('font-size: 18px; background-color: #baffc6;')
         counter_label.setAlignment(Qt.AlignCenter)
         counter_layout.addWidget(minus_button)
         counter_layout.addWidget(counter_label)
@@ -110,6 +117,7 @@ class ProductView(QWidget):
         add_button = QPushButton('Add To Cart')
         add_button.setMinimumHeight(64)
         add_button.clicked.connect(self.call_add_to_cart)
+        add_button.setStyleSheet('QPushButton::hover {background-color: green;} QPushButton {background-color: limegreen; font-weight: bold; font-size: 28px;}')
         if self.usertype != 'customer' or self.product_dict['count'] == 0:
             add_button.setDisabled(True)
 
@@ -133,14 +141,19 @@ class ProductView(QWidget):
         self.add_to_cart(self.product_id, int(self.quantity), self.price, self.supplier_id)
 
     def _create_comments_ui(self):
-        hlayout = QVBoxLayout()
+        hlayout = QHBoxLayout()
         for comment in self.comments:
             comment_label = QLabel(comment['text'])
             comment_label.setMinimumHeight(160)
             comment_label.setWordWrap(True)
-            rating_label = QLabel(str(comment['rating']))
+            rating_label = QLabel(str(comment['rating']) + ' Stars')
+            rating_label.setAlignment(Qt.AlignCenter)
+            comment_label.setStyleSheet('background-color: #edfff0; font-size: 18px;')
+            rating_label.setStyleSheet('background-color: #edfff0; font-size: 26px;')
             hlayout.addWidget(comment_label)
             hlayout.addWidget(rating_label)
+            hlayout.setStretch(0, 9)
+            hlayout.setStretch(1, 1)
         return hlayout
 
     def _create_post_comment_ui(self):
@@ -151,24 +164,51 @@ class ProductView(QWidget):
         self.comment_text.setAlignment(Qt.AlignTop)
         post = QPushButton('Post comment')
         post.clicked.connect(self.post_comment)
-        post.setMinimumHeight(160)
+        post.setMinimumHeight(36)
         if self.usertype != 'customer':
             post.setDisabled(True)
         for comment in self.comments:
             if comment['user_id'] == self.user.id:
                 post.setDisabled(True)
+
+        rater = QVBoxLayout()
+        counter_label = QLabel('5')
+        counter_label.setAlignment(Qt.AlignCenter)
+        counter_label.setMaximumHeight(36)
+        minus_button = QPushButton('-')
+        minus_button.clicked.connect(partial(self._reduce_rating, counter_label))
+        plus_button = QPushButton('+')
+        plus_button.clicked.connect(partial(self._increase_rating, counter_label))
+        rater.addWidget(plus_button)
+        rater.addWidget(counter_label)
+        rater.addWidget(minus_button)
+        rater.addWidget(post)
+
         hlayout.addWidget(self.comment_text)
-        hlayout.addWidget(post)
+        hlayout.addLayout(rater)
+
         return hlayout
 
     def post_comment(self):
-        Comment(self.comment_text.text(), 5, self.user.id, self.product_id, True)
+        Comment(self.comment_text.text(), int(self.user_rating), self.user.id, self.product_id, True)
         product = explorer.search(self.product_id, constants.product_data_filepath())
         votes = list(map(int, product['rating'].split('-')))
-        votes[5-1] += 1
+        votes[int(self.user_rating)-1] += 1
         votes = [str(i) for i in votes]
         rating = '-'.join(votes)
         product['rating'] = rating
         explorer.overwrite(constants.product_data_filepath(), product)
         QMessageBox.about(self, 'Success', 'Comment posted successfully')
         self.sender().setDisabled(True)
+
+    def _reduce_rating(self, label):
+        if int(label.text()) <= 1:
+            return
+        label.setText(str(int(label.text()) - 1))
+        self.user_rating = label.text()
+
+    def _increase_rating(self, label):
+        if int(label.text()) >= 5:
+            return
+        label.setText(str(int(label.text()) + 1))
+        self.user_rating = label.text()
