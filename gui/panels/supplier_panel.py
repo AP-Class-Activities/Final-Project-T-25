@@ -38,7 +38,7 @@ class SupplierPanel(QTabWidget):
         self.my_products.setLayout(self._create_my_products())
         self.setTabText(3, 'My Products')
 
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def _create_overview(self):
         layout = QVBoxLayout()
@@ -49,6 +49,8 @@ class SupplierPanel(QTabWidget):
 
     def _create_top_part(self):
         panel_name = QLabel('Supplier Panel')
+        panel_name.setMaximumHeight(64)
+        panel_name.setStyleSheet('background-color: #c4ffd4;')
 
         # buttons
         button_layout = QHBoxLayout()
@@ -74,10 +76,14 @@ class SupplierPanel(QTabWidget):
                 unique_product_ids.add(item[2])
 
         label1 = QLabel('Overall State')
+        label1.setAlignment(Qt.AlignCenter)
         label2 = QLabel(f'Total Revenue\n${total_revenue}')
         label3 = QLabel(f'Total Orders\n{len(self.orders)}')
         label4 = QLabel(f'Items Sold\n{sold_items}')
         label5 = QLabel(f'Unique Items Sold\n{len(unique_product_ids)}')
+        for widget in [label5, label4, label1, label3, label2]:
+            widget.setStyleSheet('background-color: #cdffc4; font-size: 20px;')
+        label1.setStyleSheet('font-weight: bold; font-size: 40px; background-color: #bff0b6;')
 
         left_layout.addWidget(label1, 0, 0, 1, 4)
         left_layout.addWidget(label2, 1, 0)
@@ -86,12 +92,14 @@ class SupplierPanel(QTabWidget):
         left_layout.addWidget(label5, 1, 3)
 
         hlayout.addLayout(left_layout)
-        hlayout.setContentsMargins(0, 24, 0, 24)
+        hlayout.setContentsMargins(0, 36, 0, 36)
         return hlayout
 
     def _create_recent_details(self):
         vlayout = QVBoxLayout()
-        vlayout.addWidget(QLabel('RECENT ORDERS'))
+        recent_label = QLabel('RECENT ORDERS')
+        recent_label.setStyleSheet('background-color: #c4ffd4;')
+        vlayout.addWidget(recent_label)
 
         hlayout = QHBoxLayout()
         hlayout.addWidget(QLabel('Names'))
@@ -218,8 +226,11 @@ class SupplierPanel(QTabWidget):
             QMessageBox.about(self, 'Error', 'Please fill all of the fields')
 
     def _create_product(self):
+        print('ok')
+        print(self.category_field.currentText())
         product = Product(str(self.category_field.currentText()), self.name_field.text(), int(self.weight_field.text()),
                           self.desc_field.text(), int(self.price_field.text()), int(self.count_field.text()), int(self.user.id))
+        print('error')
         explorer.save_image(constants.product_image_filepath(), self.image_path, str(product.id))
         QMessageBox.about(self, 'Success', 'Product added successfully')
 
@@ -246,8 +257,9 @@ class SupplierPanel(QTabWidget):
             hlayout = QHBoxLayout()
             image = explorer.get_image(product['id'], constants.product_image_filepath())
             pixmap = QPixmap(image)
+            pixmap2 = pixmap.scaledToWidth(216)
             image = QLabel()
-            image.setPixmap(pixmap)
+            image.setPixmap(pixmap2)
 
             name = QLabel(str(product['name']))
             price = QLabel(str(product['price']))

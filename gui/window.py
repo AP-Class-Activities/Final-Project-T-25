@@ -43,8 +43,8 @@ class Window(QMainWindow):
         self.first_item_row.setObjectName('first_row')
         self.second_item_row = QGroupBox('Products')
         self.second_item_row.setObjectName('second_row')
-        # self.first_item_row.setLayout(self._create_product_row())
-        # self.second_item_row.setLayout(self._create_product_row())
+        self.first_item_row.setLayout(self._create_product_row())
+        self.second_item_row.setLayout(self._create_product_row())
 
         # setting main layout
         button_layout = self._create_top_buttons()
@@ -228,9 +228,7 @@ class Window(QMainWindow):
 
         for product_id, data in self._cart.items.items():
             product = explorer.search(int(product_id), constants.product_data_filepath())
-            print(product['count'])
             product['count'] -= int(data[0])
-            print(product)
             explorer.overwrite(constants.product_data_filepath(), product)
 
         self._user.wallet -= self._cart.total()
@@ -269,7 +267,11 @@ class Window(QMainWindow):
         if self._usertype == 'customer':
             view = WalletView(self._user, self.charge_wallet, self._usertype)
         elif self._usertype == 'supplier':
-            view = WalletView(self._user, self.withdraw_wallet, self._usertype)
+            if self._user.is_approved:
+                view = WalletView(self._user, self.withdraw_wallet, self._usertype)
+            else:
+                QMessageBox.about(self, 'Error', 'Your Account needs to be approved by an operator first')
+                return
         self.change_window(view)
 
     def change_to_product(self, product_id, supplier_id, image, name, price, desc):
@@ -309,8 +311,8 @@ class Window(QMainWindow):
         self.change_window(view)
 
     def register_user(self, user, usertype):
-        self.set_user(user, True)
         self._usertype = usertype
+        self.set_user(user, True)
         self.change_to_main()
 
     def login_user(self, user_dict, usertype):
@@ -527,9 +529,11 @@ class Window(QMainWindow):
         layout = QGridLayout()
 
         # Image
-        pixmap = QPixmap('../core/xiaomi.jpg')
+        image_path = explorer.get_image(item['id'], constants.product_image_filepath())
+        pixmap = QPixmap(image_path)
+        pixmap2 = pixmap.scaledToHeight(128)
         image = QLabel()
-        image.setPixmap(pixmap)
+        image.setPixmap(pixmap2)
         image.setAlignment(Qt.AlignCenter)
         image.setWordWrap(True)
 
@@ -565,8 +569,8 @@ class Window(QMainWindow):
         label = QClickLabel(self)
         label.setLayout(layout)
         label.setObjectName('item-label')
-        label.setStyleSheet('QLabel {border: 1px solid red; background-color: white;} QClickLabel::hover {background-color: #cfffd3;}')
-        # label.clicked.connect(partial(self.change_to_product, '../core/xiaomi.jpg', name.text(), price.text(), desc.text()))
+        label.setStyleSheet('QLabel {border: 1px solid green; background-color: white;} QClickLabel::hover {background-color: #cfffd3;}')
+        label.clicked.connect(partial(self.change_to_product, item['id'], item['supplier_id'], image_path, item['name'], item['price'], item['description']))
         return label
 
 

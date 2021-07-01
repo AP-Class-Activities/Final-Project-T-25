@@ -2,7 +2,7 @@ from functools import partial
 
 from PyQt5.QtWidgets import (QLabel, QVBoxLayout, QPushButton,
                              QWidget, QHBoxLayout, QGridLayout, QFrame,
-                             QTabWidget)
+                             QTabWidget, QMessageBox)
 
 from core import explorer, constants
 
@@ -136,6 +136,7 @@ class OperatorPanel(QTabWidget):
         supplier = explorer.search(supplier_id, constants.supplier_filepath())
         supplier['is_approved'] = True
         explorer.overwrite(constants.supplier_filepath(), supplier)
+        QMessageBox.about(self, 'Success', 'Supplier approved!')
         frame.hide()
 
     def _create_approve_product(self):
@@ -171,3 +172,4 @@ class OperatorPanel(QTabWidget):
         product['is_approved'] = True
         explorer.overwrite(constants.product_data_filepath(), product)
         frame.hide()
+        QMessageBox.about(self, 'Success', 'Product approved!')

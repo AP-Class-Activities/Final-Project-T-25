@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QPushButton, QWidget, QLineEdit
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox
 from core.users import Customer, Supplier, Operator
 
 
@@ -7,18 +7,22 @@ class CustomerLoginView(QWidget):
         super().__init__(parent)
         self.login_method = login_method
         self.setLayout(self.setUI())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def setUI(self):
         login_button = QPushButton("Login")
+        login_button.setMinimumHeight(96)
+        login_button.setStyleSheet('QPushButton::hover {background-color: limegreen;} QPushButton {background-color: gray; font-size: 28px;}')
         layout = QVBoxLayout()
 
         phone_label = QLabel("PHONE")
         password_label = QLabel("PASSWORD")
 
         self.phone_textbox = QLineEdit()
+        self.phone_textbox.setMinimumHeight(64)
         self.phone_textbox.setPlaceholderText('Enter your phone number')
         self.password_textbox = QLineEdit()
+        self.password_textbox.setMinimumHeight(64)
         self.password_textbox.setPlaceholderText('Enter your password')
 
         login_button.clicked.connect(self._get_user)
@@ -38,7 +42,7 @@ class CustomerLoginView(QWidget):
             self.login_method(user, user['type'])
 
         else:
-            print('false')
+            QMessageBox.about(self, 'Error', 'Please enter valid credentials')
 
 
 class SupplierLoginView(QWidget):
@@ -46,18 +50,22 @@ class SupplierLoginView(QWidget):
         super().__init__(parent)
         self.login_method = login_method
         self.setLayout(self.setUI())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def setUI(self):
         login_button = QPushButton("Login")
+        login_button.setMinimumHeight(96)
+        login_button.setStyleSheet('QPushButton::hover {background-color: limegreen;} QPushButton {background-color: gray; font-size: 28px;}')
         layout = QVBoxLayout()
 
         phone_label = QLabel('Phone')
         password_label = QLabel('Password')
 
         self.phone_textbox = QLineEdit()
+        self.phone_textbox.setMinimumHeight(64)
         self.phone_textbox.setPlaceholderText('Enter your phone number')
         self.password_textbox = QLineEdit()
+        self.password_textbox.setMinimumHeight(64)
         self.password_textbox.setPlaceholderText('Enter your password')
 
         login_button.clicked.connect(self._get_user)
@@ -76,7 +84,7 @@ class SupplierLoginView(QWidget):
             user['type'] = 'supplier'
             self.login_method(user, user['type'])
         else:
-            print('false')
+            QMessageBox.about(self, 'Error', 'Please enter valid credentials')
 
 
 class OperatorLoginView(QWidget):
@@ -84,18 +92,22 @@ class OperatorLoginView(QWidget):
         super().__init__(parent)
         self.login_method = login_method
         self.setLayout(self.setUI())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def setUI(self):
         login_button = QPushButton("Login")
+        login_button.setMinimumHeight(96)
+        login_button.setStyleSheet('QPushButton::hover {background-color: limegreen;} QPushButton {background-color: gray; font-size: 28px;}')
         layout = QVBoxLayout()
 
         phone_label = QLabel('Phone')
         password_label = QLabel('Password')
 
         self.phone_textbox = QLineEdit()
+        self.phone_textbox.setMinimumHeight(64)
         self.phone_textbox.setPlaceholderText('Enter your phone number')
         self.password_textbox = QLineEdit()
+        self.password_textbox.setMinimumHeight(64)
         self.password_textbox.setPlaceholderText('Enter your password')
 
         login_button.clicked.connect(self._get_user)
@@ -114,4 +126,4 @@ class OperatorLoginView(QWidget):
             user['type'] = 'operator'
             self.login_method(user, user['type'])
         else:
-            print('false')
+            QMessageBox.about(self, 'Error', 'Please enter valid credentials')

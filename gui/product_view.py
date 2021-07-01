@@ -13,6 +13,7 @@ from core.comments import Comment
 class ProductView(QWidget):
     def __init__(self, add_to_cart, product_id=None, supplier_id=None, image=None, name=None, price=None, desc=None, user=None, usertype=None, parent=None):
         super().__init__(parent)
+        print('init')
         self.product_id = product_id
         self.supplier_id = supplier_id
         self.image = image
@@ -38,14 +39,15 @@ class ProductView(QWidget):
         main_vlayout.addLayout(self._create_post_comment_ui())
 
         self.setLayout(main_vlayout)
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def _create_product_ui(self):
         pixmap = QPixmap(self.image)
+        pixmap2 = pixmap.scaledToHeight(400)
         image = QLabel()
-        image.setPixmap(pixmap)
+        image.setPixmap(pixmap2)
         image.setAlignment(Qt.AlignCenter)
-        image.setMinimumHeight(500)
+        image.setMaximumHeight(500)
 
         vlayout = QVBoxLayout()
 
@@ -58,15 +60,19 @@ class ProductView(QWidget):
         # Name and Rating
         name_and_rating = QHBoxLayout()
         name = QLabel(self.name)
+        name.setMaximumHeight(200)
         rating = QLabel(str(rating))
+        rating.setMaximumHeight(200)
         name_and_rating.addWidget(name)
         name_and_rating.addWidget(rating)
         name_and_rating.setStretch(0, 8)
         name_and_rating.setStretch(1, 2)
 
-        price = QLabel(self.price)
-        desc = QLabel(self.desc)
+        price = QLabel(str(self.price))
+        price.setMaximumHeight(100)
+        desc = QLabel(str(self.desc))
         desc.setWordWrap(True)
+        desc.setMaximumHeight(200)
         vlayout.addLayout(name_and_rating)
         vlayout.addWidget(price)
         vlayout.addWidget(desc)
@@ -80,7 +86,6 @@ class ProductView(QWidget):
 
     def _create_cart_ui(self):
         vlayout = QVBoxLayout()
-        total_price = QLabel('$600')
 
         # Counter
         counter_layout = QHBoxLayout()
@@ -93,17 +98,21 @@ class ProductView(QWidget):
             counter_label.setText('Unavailable')
             minus_button.setDisabled(True)
             plus_button.setDisabled(True)
+        for widget in [minus_button, plus_button, counter_label]:
+            widget.setMinimumHeight(100)
+            widget.setStyleSheet('font-size: 18px;')
+        counter_label.setAlignment(Qt.AlignCenter)
         counter_layout.addWidget(minus_button)
         counter_layout.addWidget(counter_label)
         counter_layout.addWidget(plus_button)
 
         # Add button
         add_button = QPushButton('Add To Cart')
+        add_button.setMinimumHeight(64)
         add_button.clicked.connect(self.call_add_to_cart)
         if self.usertype != 'customer' or self.product_dict['count'] == 0:
             add_button.setDisabled(True)
 
-        vlayout.addWidget(total_price)
         vlayout.addLayout(counter_layout)
         vlayout.addWidget(add_button)
         return vlayout

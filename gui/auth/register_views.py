@@ -8,10 +8,13 @@ class CustomerRegisterView(QWidget):
         super().__init__(parent)
         self.register_method = register_method
         self.setLayout(self.setUI())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def setUI(self):
         register_button = QPushButton('REGISTER')
+        register_button.setMinimumHeight(96)
+        register_button.setStyleSheet(
+            'QPushButton::hover {background-color: limegreen;} QPushButton {background-color: gray; font-size: 28px;}')
         layout = QVBoxLayout()
 
         phone_label = QLabel('Phone')
@@ -59,10 +62,13 @@ class SupplierRegisterView(QWidget):
         super().__init__(parent)
         self.register_method = register_method
         self.setLayout(self.setUI())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def setUI(self):
         register_button = QPushButton("REGISTER")
+        register_button.setMinimumHeight(96)
+        register_button.setStyleSheet(
+            'QPushButton::hover {background-color: limegreen;} QPushButton {background-color: gray; font-size: 28px;}')
         layout = QVBoxLayout()
 
         firstname_label = QLabel('First Name')
@@ -126,10 +132,13 @@ class OperatorRegisterView(QWidget):
         super().__init__(parent)
         self.register_method = register_method
         self.setLayout(self.setUI())
-        self.setStyleSheet('border: 1px solid red; background-color: white;')
+        self.setStyleSheet('border: 1px solid green; background-color: white;')
 
     def setUI(self):
         register_button = QPushButton("REGISTER")
+        register_button.setMinimumHeight(96)
+        register_button.setStyleSheet(
+            'QPushButton::hover {background-color: limegreen;} QPushButton {background-color: gray; font-size: 28px;}')
         layout = QVBoxLayout()
 
         firstname_label = QLabel('First Name')
